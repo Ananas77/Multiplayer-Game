@@ -14,7 +14,7 @@ void main()
     vec3 lightColor = vec3(1.0f, 1.0f, 1.0f);
     vec3 lightPos = vec3(10.0f, 10.0f, 10.0f);
 
-    float ambientStrength = 0.2f;
+    float ambientStrength = 0.35f;
 
     //ambient
     vec3 ambient = ambientStrength * lightColor;
@@ -26,10 +26,10 @@ void main()
     vec3 diffuse = diffuseStrength * lightColor;
 
     // specular
-    float specularStrength = 0.5;
+    float specularStrength = 1.0f;
     vec3 viewDir = normalize(viewPos - vFragPos);
     vec3 reflectDir = reflect(-lightDir, norm);  
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 256);
     vec3 specular = specularStrength * spec * lightColor; 
 
     FragColor = texture(textures, vTexCoord) * vec4((ambient + diffuse + specular), 1.0f);

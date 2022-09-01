@@ -88,7 +88,7 @@ int main()
     }
 #endif
 
-    // glEnable(GL_DEPTH_TEST);
+    glEnable(GL_DEPTH_TEST);
 
     // Wireframe mode
     if (wireframe)
@@ -208,11 +208,11 @@ int main()
 
         // Clear Window
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // render
         cube.render(basicShader, mainCamera);
-        mainCamera.rotate(glm::vec3(1.0f, 1.0f, 0.0f));
+        cube.rotate(glm::vec3(1.0f, 1.0f, 0.0f));
 
         glfwSwapBuffers(window);
         glfwPollEvents();
