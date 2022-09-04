@@ -41,7 +41,7 @@ public:
         glEnableVertexAttribArray(0);
 
         // Normals
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(3* sizeof(float)));
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(3 * sizeof(float)));
         glEnableVertexAttribArray(1);
 
         // texture coords
@@ -66,7 +66,7 @@ public:
         shader.setMat4("transform", camera.getViewProj() * model);
         shader.setMat4("model", model);
         shader.setMat3("normalTransform", glm::mat3(glm::transpose(glm::inverse(model))));
-        shader.setVec3("viewPos", glm::vec3(0.0f, 0.0f, -3.0f));
+        shader.setVec3("viewPos", camera.getPos());
 
         // Vertex Array
         glBindVertexArray(VAO);

@@ -13,6 +13,7 @@ void main()
 {
     vec3 lightColor = vec3(1.0f, 1.0f, 1.0f);
     vec3 lightPos = vec3(10.0f, 10.0f, 10.0f);
+    vec3 viewPos = vec3(0.0f, 0.0f, -3.0f);
 
     float ambientStrength = 0.35f;
 
