@@ -66,7 +66,7 @@ public:
         shader.setMat4("transform", camera.getViewProj() * model);
         shader.setMat4("model", model);
         shader.setMat3("normalTransform", glm::mat3(glm::transpose(glm::inverse(model))));
-        shader.setVec3("viewPos", camera.getPos());
+        shader.setVec3("viewPos", camera.getPos() * -1.0f);
 
         // Vertex Array
         glBindVertexArray(VAO);

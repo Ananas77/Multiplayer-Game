@@ -212,7 +212,7 @@ int main()
 
         // render
         cube.render(basicShader, mainCamera);
-        cube.rotate(glm::vec3(1.0f, 1.0f, 0.0f));
+        cube.rotate(glm::vec3(1.0f, 1.0f, 0.0f) / 2.0f);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
