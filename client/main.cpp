@@ -194,7 +194,12 @@ int main()
     };
     unsigned int numIndices = sizeof(indices) / sizeof(unsigned int);
 
-    Entity cube(vertices, indices, numVertices, numIndices, testTexture, glm::vec3(0.0f, 0.0f, 0.0f), 0.0f, 0.0f, 0.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
+    Material testMaterial;
+    testMaterial.ambient = 0.35;
+    testMaterial.diffuse = 1.0f;
+    testMaterial.specular = 0.5f;
+
+    Entity cube(vertices, indices, numVertices, numIndices, testTexture, testMaterial, glm::vec3(0.0f, 0.0f, 0.0f), 0.0f, 0.0f, 0.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
 
     cout << "Done!" << endl;
 

@@ -7,12 +7,13 @@
 
 #include "shader.cpp"
 #include "camera.cpp"
+#include "defines.h"
 
 class Entity
 {
 public:
-    Entity(float *vertices, unsigned int *indices, unsigned int numVertices, unsigned int numIndices, unsigned int texture, glm::vec3 pos, float w, float h, float d, glm::vec3 rot, float s)
-        : w(w), h(h), d(d), texture(texture), numVertices(numVertices), numIndices(numIndices)
+    Entity(float *vertices, unsigned int *indices, unsigned int numVertices, unsigned int numIndices, unsigned int texture, Material material, glm::vec3 pos, float w, float h, float d, glm::vec3 rot, float s)
+        : w(w), h(h), d(d), texture(texture), material(material), numVertices(numVertices), numIndices(numIndices)
     {
         /*
          * Apply parameters
@@ -62,6 +63,11 @@ public:
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture);
 
+        //material
+        shader.setFloat("material.ambient", material.ambient);
+        shader.setFloat("material.diffuse", material.diffuse);
+        shader.setFloat("material.specular", material.specular);
+
         // modelViewProj matrix
         shader.setMat4("transform", camera.getViewProj() * model);
         shader.setMat4("model", model);
@@ -109,6 +115,7 @@ private:
     glm::vec3 rotation = glm::vec3(0.0f);
 
     unsigned int texture;
+    Material material;
 
     glm::mat4 model = glm::mat4(1.0f);
 
