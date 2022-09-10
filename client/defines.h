@@ -1,9 +1,16 @@
+#ifndef DEFINES_H
+#define DEFINES_H
+
 #include "lib/glm/glm.hpp"
 
 struct Material
 {
     float ambient;
     float diffuse;
-    float specular;
-    float shininess;
+    unsigned int shininess;
+
+    unsigned int texture;
+    unsigned int specular;
 };
+
+#endif

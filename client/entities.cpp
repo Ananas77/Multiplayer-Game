@@ -7,12 +7,13 @@
 
 #include "shader.cpp"
 #include "camera.cpp"
+#include "defines.h"
 
 class Entity
 {
 public:
-    Entity(float *vertices, unsigned int *indices, unsigned int numVertices, unsigned int numIndices, unsigned int texture, glm::vec3 pos, float w, float h, float d, glm::vec3 rot, float s)
-        : w(w), h(h), d(d), texture(texture), numVertices(numVertices), numIndices(numIndices)
+    Entity(float *vertices, unsigned int *indices, unsigned int numVertices, unsigned int numIndices, Material material, glm::vec3 pos, float w, float h, float d, glm::vec3 rot, float s)
+        : w(w), h(h), d(d), material(material), numVertices(numVertices), numIndices(numIndices)
     {
         /*
          * Apply parameters
@@ -60,12 +61,24 @@ public:
 
         // texture
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, texture);
+        glBindTexture(GL_TEXTURE_2D, material.texture);
+
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, material.specular);
+
+        // material
+        shader.setFloat("material.ambient", material.ambient);
+        shader.setFloat("material.diffuse", material.diffuse);
+        shader.setInt("material.shininess", material.shininess);
+        shader.setInt("material.texture", 0);
+        shader.setInt("material.specular", 1);
 
         // modelViewProj matrix
         shader.setMat4("transform", camera.getViewProj() * model);
         shader.setMat4("model", model);
         shader.setMat3("normalTransform", glm::mat3(glm::transpose(glm::inverse(model))));
+
+        // Camera pos
         shader.setVec3("viewPos", camera.getPos() * -1.0f);
 
         // Vertex Array
@@ -108,7 +121,7 @@ private:
     glm::vec3 position = glm::vec3(0.0f);
     glm::vec3 rotation = glm::vec3(0.0f);
 
-    unsigned int texture;
+    Material material;
 
     glm::mat4 model = glm::mat4(1.0f);
 

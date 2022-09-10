@@ -19,7 +19,7 @@ using namespace std;
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
 string readFile(const char *filePath);
-unsigned int loadTexture(const char *filePath, int wrap, int filter);
+unsigned int loadTexture(const char *filePath, int wrap, int magFilter, GLenum pixelFormat);
 void glfw_error_callback(int error, const char *description);
 void APIENTRY glDebugOutput(GLenum source,
                             GLenum type,
@@ -30,8 +30,8 @@ void APIENTRY glDebugOutput(GLenum source,
                             const void *userParam);
 
 // settings
-unsigned int windowWidth = 800;
-unsigned int windowHeight = 800;
+unsigned int windowWidth = 1000;
+unsigned int windowHeight = 1000;
 bool wireframe = false;
 
 int main()
@@ -116,7 +116,8 @@ int main()
     Camera mainCamera(glm::vec3(0.0f, 0.0f, -3.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, windowWidth / windowHeight, 45.0f, 0.1f, 100.0f);
 
     // textures
-    unsigned int testTexture = loadTexture("graphics/textures.jpg", GL_REPEAT, GL_LINEAR);
+    unsigned int testTexture = loadTexture("graphics/texture.png", GL_MIRRORED_REPEAT, GL_LINEAR, GL_RGBA);
+    unsigned int testSpecular = loadTexture("graphics/specular.png", GL_MIRRORED_REPEAT, GL_LINEAR, GL_RGBA);
 
     /*
      * Create Entities
@@ -128,40 +129,40 @@ int main()
         // positions            //Normals           //texture coords
 
         //front
-        0.5f, -0.5f, 0.5f,      0.0f, 0.0f, 1.0f,    0.5f, 0.5f,     // bottom right front
-        -0.5f, -0.5f, 0.5f,     0.0f, 0.0f, 1.0f,    0.5f, 0.5f,     // bottom left front
-        0.5f, 0.5f, 0.5f,       0.0f, 0.0f, 1.0f,    0.5f, 0.5f,     // top right front
-        -0.5f, 0.5f, 0.5f,      0.0f, 0.0f, 1.0f,    0.5f, 0.5f,     // top left front
+        0.5f, -0.5f, 0.5f,      0.0f, 0.0f, 1.0f,   1.0f, 0.0f,   // bottom right front
+        -0.5f, -0.5f, 0.5f,     0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left front
+        0.5f, 0.5f, 0.5f,       0.0f, 0.0f, 1.0f,   1.0f, 1.0f,   // top right front
+        -0.5f, 0.5f, 0.5f,      0.0f, 0.0f, 1.0f,   0.0f, 1.0f,   // top left front
 
         //back
-        0.5f, -0.5f, -0.5f,     0.0f, 0.0f, -1.0f,   0.5f, 0.5f,     // bottom right back
-        -0.5f, -0.5f, -0.5f,    0.0f, 0.0f, -1.0f,   0.5f, 0.5f,     // bottom left back
-        0.5f, 0.5f, -0.5f,      0.0f, 0.0f, -1.0f,   0.5f, 0.5f,     // top right back
-        -0.5f, 0.5f, -0.5f,     0.0f, 0.0f, -1.0f,   0.5f, 0.5f,     // top left back
+        0.5f, -0.5f, -0.5f,     0.0f, 0.0f, -1.0f,  1.0f, 0.0f,   // bottom right back
+        -0.5f, -0.5f, -0.5f,    0.0f, 0.0f, -1.0f,  0.0f, 0.0f,   // bottom left back
+        0.5f, 0.5f, -0.5f,      0.0f, 0.0f, -1.0f,  1.0f, 1.0f,   // top right back
+        -0.5f, 0.5f, -0.5f,     0.0f, 0.0f, -1.0f,  0.0f, 1.0f,   // top left back
 
         //top
-        0.5f, 0.5f, 0.5f,       0.0f, 1.0f, 0.0f,    0.5f, 0.5f,     // top right front
-        -0.5f, 0.5f, 0.5f,      0.0f, 1.0f, 0.0f,    0.5f, 0.5f,     // top left front
-        0.5f, 0.5f, -0.5f,      0.0f, 1.0f, 0.0f,    0.5f, 0.5f,     // top right back
-        -0.5f, 0.5f, -0.5f,     0.0f, 1.0f, 0.0f,    0.5f, 0.5f,     // top left back
+        0.5f, 0.5f, 0.5f,       0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // top right front
+        -0.5f, 0.5f, 0.5f,      0.0f, 1.0f, 0.0f,   0.0f, 0.0f,   // top left front
+        0.5f, 0.5f, -0.5f,      0.0f, 1.0f, 0.0f,   1.0f, 1.0f,   // top right back
+        -0.5f, 0.5f, -0.5f,     0.0f, 1.0f, 0.0f,   0.0f, 1.0f,   // top left back
 
         //bottom
-        0.5f, -0.5f, 0.5f,      0.0f, -1.0f, 0.0f,   0.5f, 0.5f,     // bottom right front
-        -0.5f, -0.5f, 0.5f,     0.0f, -1.0f, 0.0f,   0.5f, 0.5f,     // bottom left front
-        0.5f, -0.5f, -0.5f,     0.0f, -1.0f, 0.0f,   0.5f, 0.5f,     // bottom right back
-        -0.5f, -0.5f, -0.5f,    0.0f, -1.0f, 0.0f,   0.5f, 0.5f,     // bottom left back
+        0.5f, -0.5f, 0.5f,      0.0f, -1.0f, 0.0f,  1.0f, 0.0f,   // bottom right front
+        -0.5f, -0.5f, 0.5f,     0.0f, -1.0f, 0.0f,  0.0f, 0.0f,   // bottom left front
+        0.5f, -0.5f, -0.5f,     0.0f, -1.0f, 0.0f,  1.0f, 1.0f,   // bottom right back
+        -0.5f, -0.5f, -0.5f,    0.0f, -1.0f, 0.0f,  0.0f, 1.0f,   // bottom left back
 
         //right
-        0.5f, -0.5f, 0.5f,      1.0f, 0.0f, 0.0f,    0.5f, 0.5f,     // bottom right front
-        0.5f, 0.5f, 0.5f,       1.0f, 0.0f, 0.0f,    0.5f, 0.5f,     // top right front
-        0.5f, -0.5f, -0.5f,     1.0f, 0.0f, 0.0f,    0.5f, 0.5f,     // bottom right back
-        0.5f, 0.5f, -0.5f,      1.0f, 0.0f, 0.0f,    0.5f, 0.5f,     // top right back
+        0.5f, -0.5f, 0.5f,      1.0f, 0.0f, 0.0f,   1.0f, 0.0f,   // bottom right front
+        0.5f, 0.5f, 0.5f,       1.0f, 0.0f, 0.0f,   0.0f, 0.0f,   // top right front
+        0.5f, -0.5f, -0.5f,     1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // bottom right back
+        0.5f, 0.5f, -0.5f,      1.0f, 0.0f, 0.0f,   0.0f, 1.0f,   // top right back
 
         //left
-        -0.5f, -0.5f, 0.5f,     -1.0f, 0.0f, 0.0f,   0.5f, 0.5f,     // bottom right front
-        -0.5f, 0.5f, 0.5f,      -1.0f, 0.0f, 0.0f,   0.5f, 0.5f,     // top right front
-        -0.5f, -0.5f, -0.5f,    -1.0f, 0.0f, 0.0f,   0.5f, 0.5f,     // bottom right back
-        -0.5f, 0.5f, -0.5f,     -1.0f, 0.0f, 0.0f,   0.5f, 0.5f,     // top right back
+        -0.5f, -0.5f, 0.5f,     -1.0f, 0.0f, 0.0f,  1.0f, 0.0f,   // bottom right front
+        -0.5f, 0.5f, 0.5f,      -1.0f, 0.0f, 0.0f,  0.0f, 0.0f,   // top right front
+        -0.5f, -0.5f, -0.5f,    -1.0f, 0.0f, 0.0f,  1.0f, 1.0f,   // bottom right back
+        -0.5f, 0.5f, -0.5f,     -1.0f, 0.0f, 0.0f,  0.0f, 1.0f,   // top right back
     };
     unsigned int numVertices = sizeof(vertices) / sizeof(float);
 
@@ -194,7 +195,14 @@ int main()
     };
     unsigned int numIndices = sizeof(indices) / sizeof(unsigned int);
 
-    Entity cube(vertices, indices, numVertices, numIndices, testTexture, glm::vec3(0.0f, 0.0f, 0.0f), 0.0f, 0.0f, 0.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
+    Material testMaterial;
+    testMaterial.ambient = 0.35f;
+    testMaterial.diffuse = 1.0f;
+    testMaterial.shininess = 64;
+    testMaterial.texture = testTexture;
+    testMaterial.specular = testSpecular;
+
+    Entity cube(vertices, indices, numVertices, numIndices, testMaterial, glm::vec3(0.0f, 0.0f, 0.0f), 0.0f, 0.0f, 0.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
 
     cout << "Done!" << endl;
 
@@ -261,8 +269,8 @@ string readFile(const char *filePath)
     return content;
 }
 
-// loads texture so that it is usable for GL
-unsigned int loadTexture(const char *filePath, int wrap, int filter)
+// loads texture, so that it is usable for GL
+unsigned int loadTexture(const char *filePath, int wrap, int magFilter, GLenum pixelFormat)
 {
     stbi_set_flip_vertically_on_load(true);
 
@@ -270,23 +278,24 @@ unsigned int loadTexture(const char *filePath, int wrap, int filter)
     unsigned char *data = stbi_load(filePath, &width, &height, &nrChannels, 0);
 
     unsigned int texture;
+
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilter);
 
     if (data)
     {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
     }
     else
     {
-        cout << "Failed to load textures" << endl;
+        cout << "Failed to load texture " << filePath << endl;
     }
 
     stbi_image_free(data);
