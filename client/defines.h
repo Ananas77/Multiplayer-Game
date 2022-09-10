@@ -7,7 +7,10 @@ struct Material
 {
     float ambient;
     float diffuse;
-    float specular;
+    unsigned int shininess;
+
+    unsigned int texture;
+    unsigned int specular;
 };
 
 #endif
