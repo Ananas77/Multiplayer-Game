@@ -202,6 +202,19 @@ int main()
     testMaterial.texture = testTexture;
     testMaterial.specular = testSpecular;
 
+    StdLight mainLight;
+    mainLight.position = glm::vec3(10.0f, 10.0f, 10.0f);
+    mainLight.color = glm::vec3(1.0f, 1.0f, 1.0f);
+    mainLight.ambient = 1.0f;
+    mainLight.diffuse = 1.0f;
+    mainLight.specular = 1.0f;
+
+    basicShader.use();
+    basicShader.setVec3("light.position", mainLight.position);
+    basicShader.setVec3("light.ambient", mainLight.color * mainLight.ambient);
+    basicShader.setVec3("light.diffuse", mainLight.color * mainLight.diffuse);
+    basicShader.setVec3("light.specular", mainLight.color * mainLight.specular);
+
     Entity cube(vertices, indices, numVertices, numIndices, testMaterial, glm::vec3(0.0f, 0.0f, 0.0f), 0.0f, 0.0f, 0.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
 
     cout << "Done!" << endl;
