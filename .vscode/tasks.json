@@ -7,12 +7,12 @@
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
-                "main.cpp",
-                "shader.cpp",
-                "camera.cpp",
-                "lib/glad/glad.c",
+                "${workspaceFolder}/client/main.cpp",
+                "${workspaceFolder}/client/shader.cpp",
+                "${workspaceFolder}/client/camera.cpp",
+                "${workspaceFolder}/client/lib/glad/glad.c",
                 "-o",
-                "${fileDirname}/main",
+                "${workspaceFolder}/client/main",
                 "-lglfw",
                 "-D_DEBUG"
             ],

@@ -202,18 +202,24 @@ int main()
     testMaterial.texture = testTexture;
     testMaterial.specular = testSpecular;
 
-    StdLight mainLight;
-    mainLight.position = glm::vec3(10.0f, 10.0f, 10.0f);
+    PointLight mainLight;
+    mainLight.position = glm::vec3(0.8f, 0.8f, 0.8f);
     mainLight.color = glm::vec3(1.0f, 1.0f, 1.0f);
     mainLight.ambient = 1.0f;
     mainLight.diffuse = 1.0f;
     mainLight.specular = 1.0f;
+    mainLight.constant = 1.0f;
+    mainLight.linear = 0.7f;
+    mainLight.quadratic = 1.8f;
 
     basicShader.use();
     basicShader.setVec3("light.position", mainLight.position);
     basicShader.setVec3("light.ambient", mainLight.color * mainLight.ambient);
     basicShader.setVec3("light.diffuse", mainLight.color * mainLight.diffuse);
     basicShader.setVec3("light.specular", mainLight.color * mainLight.specular);
+    basicShader.setFloat("light.constant", mainLight.constant);
+    basicShader.setFloat("light.linear", mainLight.linear);
+    basicShader.setFloat("light.quadratic", mainLight.quadratic);
 
     Entity cube(vertices, indices, numVertices, numIndices, testMaterial, glm::vec3(0.0f, 0.0f, 0.0f), 0.0f, 0.0f, 0.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
 
