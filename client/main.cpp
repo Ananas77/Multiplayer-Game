@@ -233,7 +233,7 @@ int main()
 
         // render
         cube.render(basicShader, mainCamera);
-        cube.rotate(glm::vec3(1.0f, 1.0f, 0.0f) / 2.0f);
+        cube.rotate(glm::vec3(1.0f, 1.0f, 0.0f) / 3.0f);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -333,7 +333,7 @@ void APIENTRY glDebugOutput(GLenum source,
                             const void *userParam)
 {
     // ignore non-significant error/warning codes
-    if (id == 131169 || id == 131185 || id == 131218 || id == 131204)
+    if (id == 131169 || id == 131185 || id == 131218 || id == 131204 || severity == GL_DEBUG_SEVERITY_NOTIFICATION)
         return;
 
     std::cout << "---------------" << std::endl;

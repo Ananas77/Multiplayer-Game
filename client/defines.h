@@ -45,7 +45,11 @@ struct Spotlight : Light
     glm::vec3 position;
     glm::vec3 direction;
 
-    float cutOff;    
+    float cutOff;
+    
+    float constant;
+    float linear;
+    float quadratic;
 };
 
 #endif

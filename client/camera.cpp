@@ -9,7 +9,7 @@ class Camera
 {
 public:
     Camera(glm::vec3 position, glm::vec3 rotation, float s, float aspectRatio, float fov, float near, float far)
-        : aspectRatio(aspectRatio), fov(fov)
+        : aspectRatio(aspectRatio), fov(fov), near(near), far(far)
     {
         projection = glm::perspective(glm::radians(fov), aspectRatio, near, far);
         translate(position);
@@ -58,7 +58,7 @@ private:
     glm::vec3 position = glm::vec3(0.0f);
     glm::vec3 rotation = glm::vec3(0.0f);
     float s;
-    float fov, aspectRatio;
+    float fov, aspectRatio, near, far;
 
     void setViewProj()
     {
