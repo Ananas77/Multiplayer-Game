@@ -31,10 +31,8 @@ struct DirLight : Light
     glm::vec3 direction;
 };
 
-struct PointLight : Light
+struct PointLight : StdLight
 {
-    glm::vec3 position;
-
     float constant = 1.0f;
     float linear;
     float quadratic;

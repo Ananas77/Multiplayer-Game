@@ -196,36 +196,33 @@ int main()
     unsigned int numIndices = sizeof(indices) / sizeof(unsigned int);
 
     Material testMaterial;
-    testMaterial.ambient = 0.35f;
+    testMaterial.ambient = 1.0f;
     testMaterial.diffuse = 1.0f;
-    testMaterial.shininess = 32.0f;
+    testMaterial.shininess = 32;
     testMaterial.texture = testTexture;
     testMaterial.specular = testSpecular;
 
-    Spotlight mainLight;
-    mainLight.position = glm::vec3(0.0f, 0.0f, -1.0f);
-    mainLight.direction = normalize(glm::vec3(0.0f, 0.0f, 1.0f));
+    DirLight mainLight;
+    mainLight.direction = glm::vec3(-2.0f, -2.0f, -2.0f);
     mainLight.color = glm::vec3(1.0f, 1.0f, 1.0f);
-    mainLight.ambient = 1.0f;
-    mainLight.diffuse = 1.0f;
+    mainLight.ambient = 0.35f;
+    mainLight.diffuse = 0.7f;
     mainLight.specular = 1.0f;
-    mainLight.constant = 1.0f;
-    mainLight.linear = 0.09f;
-    mainLight.quadratic = 0.032f;
-    mainLight.cutOff = glm::cos(glm::radians(12.5f));
-    mainLight.outerCutOff = glm::cos(glm::radians(17.5f));
-
+    PointLight secondaryLight;
+    secondaryLight.position = glm::vec3(-2.0f, -2.0f, -2.0f);
+    secondaryLight.color = glm::vec3(1.0f, 1.0f, 1.0f);
+    secondaryLight.ambient = 0.35f;
+    secondaryLight.diffuse = 1.0f;
+    secondaryLight.specular = 1.0f;
+    secondaryLight.linear = 0.07f;
+    secondaryLight.quadratic = 0.032f;
     basicShader.use();
-    basicShader.setVec3("light.position", mainLight.position);
-    basicShader.setVec3("light.direction", mainLight.direction);
-    basicShader.setVec3("light.ambient", mainLight.color * mainLight.ambient);
-    basicShader.setVec3("light.diffuse", mainLight.color * mainLight.diffuse);
-    basicShader.setVec3("light.specular", mainLight.color * mainLight.specular);
-    basicShader.setFloat("light.constant", mainLight.constant);
-    basicShader.setFloat("light.linear", mainLight.linear);
-    basicShader.setFloat("light.quadratic", mainLight.quadratic);
-    basicShader.setFloat("light.cutOff", mainLight.cutOff);
-    basicShader.setFloat("light.outerCutOff", mainLight.outerCutOff);
+    basicShader.setInt("numLights", 0);
+    basicShader.setInt("numDirLights", 1);
+    basicShader.setInt("numPointLights", 1);
+    basicShader.setInt("numSpotlights", 0);
+    basicShader.setDirLight("dirLights[0]", mainLight);
+    basicShader.setPointLight("pointLights[0]", secondaryLight);
 
     Entity cube(vertices, indices, numVertices, numIndices, testMaterial, glm::vec3(0.0f, 0.0f, 0.0f), 0.0f, 0.0f, 0.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
 

@@ -10,6 +10,8 @@
 #include <sstream>
 #include <iostream>
 
+#include "defines.h"
+
 class Shader
 {
 public:
@@ -117,7 +119,48 @@ public:
         glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
     }
 
-private:
+    void setLight(const std::string &name, const StdLight light) const
+    {
+        setVec3(name + ".position", light.position);
+        setVec3(name + ".ambient", light.color * light.ambient);
+        setVec3(name + ".diffuse", light.color * light.diffuse);
+        setVec3(name + ".specular", light.color * light.specular);
+    }
+
+    void setDirLight(const std::string &name, const DirLight light) const
+    {
+        setVec3(name + ".direction", light.direction);
+        setVec3(name + ".ambient", light.color * light.ambient);
+        setVec3(name + ".diffuse", light.color * light.diffuse);
+        setVec3(name + ".specular", light.color * light.specular);
+    }
+
+    void setPointLight(const std::string &name, const PointLight light) const
+    {
+        setVec3(name + ".position", light.position);
+        setVec3(name + ".ambient", light.color * light.ambient);
+        setVec3(name + ".diffuse", light.color * light.diffuse);
+        setVec3(name + ".specular", light.color * light.specular);
+        setFloat(name + ".constant", light.constant);
+        setFloat(name + ".linear", light.linear);
+        setFloat(name + ".quadratic", light.quadratic);
+    }
+
+    void setSpotlight(const std::string &name, const Spotlight light) const
+    {
+        setVec3(name + ".position", light.position);
+        setVec3(name + ".direction", light.direction);
+        setVec3(name + ".ambient", light.color * light.ambient);
+        setVec3(name + ".diffuse", light.color * light.diffuse);
+        setVec3(name + ".specular", light.color * light.specular);
+        setFloat(name + ".constant", light.constant);
+        setFloat(name + ".linear", light.linear);
+        setFloat(name + ".quadratic", light.quadratic);
+        setFloat(name + ".cutOff", light.cutOff);
+        setFloat(name + ".outerCutOff", light.outerCutOff);
+    }
+
+    private :
     // shader ID
     unsigned int ID;
 
