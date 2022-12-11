@@ -196,11 +196,33 @@ int main()
     unsigned int numIndices = sizeof(indices) / sizeof(unsigned int);
 
     Material testMaterial;
-    testMaterial.ambient = 0.35f;
+    testMaterial.ambient = 1.0f;
     testMaterial.diffuse = 1.0f;
-    testMaterial.shininess = 64;
+    testMaterial.shininess = 32;
     testMaterial.texture = testTexture;
     testMaterial.specular = testSpecular;
+
+    DirLight mainLight;
+    mainLight.direction = glm::vec3(-2.0f, -2.0f, -2.0f);
+    mainLight.color = glm::vec3(1.0f, 1.0f, 1.0f);
+    mainLight.ambient = 0.35f;
+    mainLight.diffuse = 0.7f;
+    mainLight.specular = 1.0f;
+    PointLight secondaryLight;
+    secondaryLight.position = glm::vec3(-2.0f, -2.0f, -2.0f);
+    secondaryLight.color = glm::vec3(1.0f, 1.0f, 1.0f);
+    secondaryLight.ambient = 0.35f;
+    secondaryLight.diffuse = 1.0f;
+    secondaryLight.specular = 1.0f;
+    secondaryLight.linear = 0.07f;
+    secondaryLight.quadratic = 0.032f;
+    basicShader.use();
+    basicShader.setInt("numLights", 0);
+    basicShader.setInt("numDirLights", 1);
+    basicShader.setInt("numPointLights", 1);
+    basicShader.setInt("numSpotlights", 0);
+    basicShader.setDirLight("dirLights[0]", mainLight);
+    basicShader.setPointLight("pointLights[0]", secondaryLight);
 
     Entity cube(vertices, indices, numVertices, numIndices, testMaterial, glm::vec3(0.0f, 0.0f, 0.0f), 0.0f, 0.0f, 0.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
 
@@ -220,7 +242,7 @@ int main()
 
         // render
         cube.render(basicShader, mainCamera);
-        cube.rotate(glm::vec3(1.0f, 1.0f, 0.0f) / 2.0f);
+        cube.rotate(glm::vec3(1.0f, 1.0f, 0.0f) / 3.0f);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -320,7 +342,7 @@ void APIENTRY glDebugOutput(GLenum source,
                             const void *userParam)
 {
     // ignore non-significant error/warning codes
-    if (id == 131169 || id == 131185 || id == 131218 || id == 131204)
+    if (id == 131169 || id == 131185 || id == 131218 || id == 131204 || severity == GL_DEBUG_SEVERITY_NOTIFICATION)
         return;
 
     std::cout << "---------------" << std::endl;

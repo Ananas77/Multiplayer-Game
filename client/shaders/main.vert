@@ -16,6 +16,6 @@ void main()
 {
     gl_Position = transform * vec4(aPos, 1.0f);
     vFragPos = vec3(model * vec4(aPos, 1.0f));
-    vNormal = aNormal * normalTransform;
+    vNormal = normalize(normalTransform * aNormal);
     vTexCoord = aTexCoord;
 }
