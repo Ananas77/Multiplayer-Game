@@ -198,28 +198,34 @@ int main()
     Material testMaterial;
     testMaterial.ambient = 0.35f;
     testMaterial.diffuse = 1.0f;
-    testMaterial.shininess = 64;
+    testMaterial.shininess = 32.0f;
     testMaterial.texture = testTexture;
     testMaterial.specular = testSpecular;
 
-    PointLight mainLight;
-    mainLight.position = glm::vec3(0.8f, 0.8f, 0.8f);
+    Spotlight mainLight;
+    mainLight.position = glm::vec3(0.0f, 0.0f, -1.0f);
+    mainLight.direction = normalize(glm::vec3(0.0f, 0.0f, 1.0f));
     mainLight.color = glm::vec3(1.0f, 1.0f, 1.0f);
     mainLight.ambient = 1.0f;
     mainLight.diffuse = 1.0f;
     mainLight.specular = 1.0f;
     mainLight.constant = 1.0f;
-    mainLight.linear = 0.7f;
-    mainLight.quadratic = 1.8f;
+    mainLight.linear = 0.09f;
+    mainLight.quadratic = 0.032f;
+    mainLight.cutOff = glm::cos(glm::radians(12.5f));
+    mainLight.outerCutOff = glm::cos(glm::radians(17.5f));
 
     basicShader.use();
     basicShader.setVec3("light.position", mainLight.position);
+    basicShader.setVec3("light.direction", mainLight.direction);
     basicShader.setVec3("light.ambient", mainLight.color * mainLight.ambient);
     basicShader.setVec3("light.diffuse", mainLight.color * mainLight.diffuse);
     basicShader.setVec3("light.specular", mainLight.color * mainLight.specular);
     basicShader.setFloat("light.constant", mainLight.constant);
     basicShader.setFloat("light.linear", mainLight.linear);
     basicShader.setFloat("light.quadratic", mainLight.quadratic);
+    basicShader.setFloat("light.cutOff", mainLight.cutOff);
+    basicShader.setFloat("light.outerCutOff", mainLight.outerCutOff);
 
     Entity cube(vertices, indices, numVertices, numIndices, testMaterial, glm::vec3(0.0f, 0.0f, 0.0f), 0.0f, 0.0f, 0.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
 

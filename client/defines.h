@@ -40,16 +40,11 @@ struct PointLight : Light
     float quadratic;
 };
 
-struct Spotlight : Light
+struct Spotlight : PointLight
 {
-    glm::vec3 position;
     glm::vec3 direction;
-
     float cutOff;
-    
-    float constant;
-    float linear;
-    float quadratic;
+    float outerCutOff;
 };
 
 #endif
