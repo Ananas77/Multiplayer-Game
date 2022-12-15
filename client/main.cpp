@@ -47,6 +47,7 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_SAMPLES, 4);
 
 #ifdef __APPLE__
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
@@ -89,6 +90,8 @@ int main()
 #endif
 
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_MULTISAMPLE);
+    glEnable(GL_FRAMEBUFFER_SRGB);
 
     // Wireframe mode
     if (wireframe)
@@ -204,25 +207,16 @@ int main()
 
     DirLight mainLight;
     mainLight.direction = glm::vec3(-2.0f, -2.0f, -2.0f);
-    mainLight.color = glm::vec3(1.0f, 1.0f, 1.0f);
-    mainLight.ambient = 0.35f;
-    mainLight.diffuse = 0.7f;
+    mainLight.color = glm::vec3(0.7f, 0.5f, 0.3f);
+    mainLight.ambient = 0.1f;
+    mainLight.diffuse = 0.5f;
     mainLight.specular = 1.0f;
-    PointLight secondaryLight;
-    secondaryLight.position = glm::vec3(-2.0f, -2.0f, -2.0f);
-    secondaryLight.color = glm::vec3(1.0f, 1.0f, 1.0f);
-    secondaryLight.ambient = 0.35f;
-    secondaryLight.diffuse = 1.0f;
-    secondaryLight.specular = 1.0f;
-    secondaryLight.linear = 0.07f;
-    secondaryLight.quadratic = 0.032f;
     basicShader.use();
     basicShader.setInt("numLights", 0);
     basicShader.setInt("numDirLights", 1);
-    basicShader.setInt("numPointLights", 1);
+    basicShader.setInt("numPointLights", 0);
     basicShader.setInt("numSpotlights", 0);
     basicShader.setDirLight("dirLights[0]", mainLight);
-    basicShader.setPointLight("pointLights[0]", secondaryLight);
 
     Entity cube(vertices, indices, numVertices, numIndices, testMaterial, glm::vec3(0.0f, 0.0f, 0.0f), 0.0f, 0.0f, 0.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
 
