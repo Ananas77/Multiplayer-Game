@@ -38,15 +38,18 @@ public:
     void rotate(glm::vec3 d)
     {
         rotation += d;
+        glm::vec3 pos = position;
+        translate(-pos);
         view = glm::rotate(view, glm::radians(d.x), glm::vec3(1, 0, 0));
         view = glm::rotate(view, glm::radians(d.y), glm::vec3(0, 1, 0));
         view = glm::rotate(view, glm::radians(d.z), glm::vec3(0, 0, 1));
+        translate(pos);
         setViewProj();
     }
 
     void scale(float d)
     {
-        s += d;
+        s *= d;
         view = glm::scale(view, glm::vec3(d));
         setViewProj();
     }

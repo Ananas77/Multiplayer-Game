@@ -98,9 +98,12 @@ public:
     void rotate(glm::vec3 d)
     {
         rotation += d;
+        glm::vec3 pos = position;
+        translate(-pos);
         model = glm::rotate(model, glm::radians(d.x), glm::vec3(1, 0, 0));
         model = glm::rotate(model, glm::radians(d.y), glm::vec3(0, 1, 0));
         model = glm::rotate(model, glm::radians(d.z), glm::vec3(0, 0, 1));
+        translate(pos);
     }
 
     void scale(float d)

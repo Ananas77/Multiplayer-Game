@@ -33,6 +33,9 @@ void APIENTRY glDebugOutput(GLenum source,
 unsigned int windowWidth = 1000;
 unsigned int windowHeight = 1000;
 bool wireframe = false;
+bool logFPS = true;
+bool gammaCorrection = true;
+bool antiAliasing = true;
 
 int main()
 {
@@ -90,8 +93,14 @@ int main()
 #endif
 
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_MULTISAMPLE);
-    glEnable(GL_FRAMEBUFFER_SRGB);
+    if (antiAliasing)
+    {
+        glEnable(GL_MULTISAMPLE);
+    }
+    if (gammaCorrection)
+    {
+        glEnable(GL_FRAMEBUFFER_SRGB);
+    }
 
     // Wireframe mode
     if (wireframe)
@@ -219,6 +228,11 @@ int main()
     basicShader.setDirLight("dirLights[0]", mainLight);
 
     Entity cube(vertices, indices, numVertices, numIndices, testMaterial, glm::vec3(0.0f, 0.0f, 0.0f), 0.0f, 0.0f, 0.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
+    Entity cube2(vertices, indices, numVertices, numIndices, testMaterial, glm::vec3(0.0f, -4.0f, 0.0f), 0.0f, 0.0f, 0.0f, glm::vec3(0.0f, 0.0f, 0.0f), 4.0f);
+
+    float time = glfwGetTime();
+    float delta = 0.0f;
+    float fps = 0.0f;
 
     cout << "Done!" << endl;
 
@@ -240,6 +254,16 @@ int main()
 
         glfwSwapBuffers(window);
         glfwPollEvents();
+        
+        //fps
+        float newTime = glfwGetTime();
+        delta = newTime - time;
+        time = newTime;
+        if (logFPS)
+        {
+            fps = 1.0f / delta;
+            cout << "FPS: " << fps << endl;
+        }
     }
 
     // close window
